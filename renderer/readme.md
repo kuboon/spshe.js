@@ -19,6 +19,10 @@ console.log(html)
 ```
 
 ```
-<table>
-	<tr><td> </td><th>A</th><th>B</th></tr>
-	<tr><th>1</th><td>3</td>
+<table class='spshe'>
+	<tr><td class='topleft'></td><th>A</th><th>B</th></tr>
+	<tr><th>1</th><td>3</td></tr>
+	<tr><th>2</th><td>7</td></tr>
+	<tr><th>3</th><td>10</td></tr>
+</table>
+```
