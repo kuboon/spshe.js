@@ -18,6 +18,7 @@ const doc = {
 
 const code = compile(doc)
 console.log(code)
+```
 
 ```
 (i, o) => {
