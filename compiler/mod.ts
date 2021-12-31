@@ -17,8 +17,7 @@ function compileCell(cell): CompiledCell {
 	const rows = cell.rows || 1
 	const cols = cell.cols || 1
 	if(rows === 1 && cols === 1){
-		const [col, row] = extractCellKey(key)
-		const left = `c[${col}][${row}]`
+		const left = `$[${key}]`
 		const {type, value} = cell
 		const {deps, right} = compileFormula({col, row, value})
 		switch(type){
