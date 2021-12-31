@@ -22,13 +22,5 @@ const _addEventListener = addEventListener;
 
 Object.assign(this, Math)
 _addEventListener("message", ({data, doc}) => {
-	const $ = (() => {
-		class Cells {
-			constructor(doc){
-				this.doc = doc
-			}
-		}
-		return new Cells(doc)
-	})(doc)
-	_postMessage(new Function('$', data)());
+	_postMessage(new Function('$', data)(doc));
 });
