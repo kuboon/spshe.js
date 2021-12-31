@@ -12,7 +12,7 @@ const doc = {
 	'A1': 3,
 	'A2': 7,
 	'A3': {
-		type: 'func',
+		type: 'formula',
 		value: 'A1+A2'
 	}
 }

@@ -1,5 +1,5 @@
 # renderer
-renderer は、 SpsheConstDoc から html や react VirtualDom を生成します。
+renderer は、 SpsheConstDoc から html や VirtualDom を生成します。
 
 ```
 import { renderHtmlTable } from './mod.ts'
