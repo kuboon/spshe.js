@@ -1,5 +1,4 @@
 "use strict";
-const _addEventListener = addEventListener;
 function removeGlobals(){
   const keepProperties = [
     "Object",
@@ -35,18 +34,35 @@ function removeGlobals(){
     current = Object.getPrototypeOf(current);
   } while (current !== Object.prototype);
 }
-
+function* rangeIter(doc, from, to) {
+  const matcher = /^([A-Z]+)([0-9]+)$/;
+  const f = matcher.exec(from);
+  const t = matcher.exec(to);
+  for(let c = f[1]; c <= t[1]; c++) {
+    for(let r = Number(f[2]); r <= Number(t[2]); r++) {
+      const key = c + r;
+      if(doc[key]) {
+        yield key
+      }
+    }
+  }
+}
+const proxyHandler = {
+  get(doc, key) {
+    const [from, to] = key.split(':')
+    if (!to) {
+      return doc[key];
+    }
+    return [...rangeIter(doc, from, to)].map(key => doc[key]);
+  },
+  set(doc, key, value) {
+    doc[key] = value;
+    return true;
+  }
+}
 addEventListener("message", ({ data }) => {
   const { code, doc } = data;
-  const resolver = new Proxy(doc, {
-    get(_, key) {
-      return doc[key]
-    },
-    set(_, key, value) {
-      doc[key] = value;
-      return true;
-    }
-  })
+  const resolver = new Proxy(doc, proxyHandler)
   const _postMessage = postMessage;
   removeGlobals()
   console.log(code)

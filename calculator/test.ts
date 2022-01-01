@@ -48,12 +48,15 @@ Deno.test({
 		const doc: SpsheDoc = {
 			A1: {
 				type: 'formula',
-				value: 'Math.max(A2:A3)',
+				value: 'Math.max(...A2:A3)',
 			},
-			A2: 3,
+			A2: {
+				type: 'formula',
+				value: 'A3+1'
+			},
 			A3: 4
 		}
 		const result = await calculate(doc)
-		assertEquals(result.A1, 4)
+		assertEquals(result.A1, 5)
 	}
 })
