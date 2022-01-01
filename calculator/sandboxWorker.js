@@ -1,7 +1,6 @@
 "use strict";
-const _postMessage = postMessage;
 const _addEventListener = addEventListener;
-((obj) => {
+function removeGlobals(){
   const keepProperties = [
     "Object",
     "Function",
@@ -26,7 +25,7 @@ const _addEventListener = addEventListener;
     "Math",
     "Set",
   ];
-  let current = obj;
+  let current = globalThis;
   do {
     Object.getOwnPropertyNames(current).forEach((name) => {
       if (keepProperties.indexOf(name) === -1) {
@@ -35,14 +34,28 @@ const _addEventListener = addEventListener;
     });
     current = Object.getPrototypeOf(current);
   } while (current !== Object.prototype);
-})(globalThis);
+}
 
-_addEventListener("message", ({ data }) => {
+addEventListener("message", ({ data }) => {
   const { code, doc } = data;
-  const fm = (key, val) => {
-    if (val) doc[key] = val;
-    return doc[key];
-  };
-  new Function("$", code)(fm);
+  const resolver = new Proxy(doc, {
+    get(_, key) {
+      return doc[key]
+    },
+    set(_, key, value) {
+      doc[key] = value;
+      return true;
+    }
+  })
+  const _postMessage = postMessage;
+  removeGlobals()
+  console.log(code)
+  new Function("$", code)(resolver);
+
+  for(const key in doc) {
+    if(typeof doc[key] === "function") {
+      delete doc[key]
+    }
+  }
   _postMessage(doc);
 });

@@ -16,10 +16,10 @@ function compileCell(key: string, cell: Formula | Lambda): CompiledCell {
 	const deps: string[] = []
 	function replacer(ref: string) {
 		deps.push(ref)
-		return `$('${ref}')`;
+		return `$.${ref}`;
 	}
 	const str = cell.value.replace(/([A-Z]+)(\d+)(:([A-Z]+)(\d+))?/g, replacer);
-	const js = `$('${key}', ${str})`
+	const js = `$.${key} = ${str}`
 	return {deps, js}
 }
 function isPrimitive(cell: Cell): cell is Primitive {
