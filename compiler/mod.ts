@@ -5,7 +5,7 @@ export function compile(doc: SpsheDoc): string {
 	const compiled: CompiledCells = {}
 	for (const key in doc) {
 		const cell = doc[key]
-		if (!isPrimitive(cell)) {
+		if (isPrimitive(cell)) continue
 			compiled[key] = compileCell(key, cell)
 		}
 	}
@@ -15,11 +15,11 @@ export function compile(doc: SpsheDoc): string {
 function compileCell(key: string, cell: Formula | Lambda): CompiledCell {
 	const deps: string[] = []
 	function replacer(ref: string) {
-		deps.push(ref)
-		return `$.${ref}`;
+		deps.push(...rangeIterator(doc, ref, ref))
+		return `$['${ref}']`;
 	}
 	const str = cell.value.replace(/([A-Z]+)(\d+)(:([A-Z]+)(\d+))?/g, replacer);
-	const js = `$.${key} = ${str}`
+	const js = `$['${key}'] = ${str}`
 	return {deps, js}
 }
 function isPrimitive(cell: Cell): cell is Primitive {
