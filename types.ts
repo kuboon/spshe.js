@@ -1,15 +1,15 @@
-export type DateTime = ReadOnly<{
+export type DateTime = Readonly<{
 	type: 'datetime',
 	tz: string,
 	value: number // Date.getTime() always UTC
 }>
 export type Primitive = boolean | number | string | bigint | DateTime
 
-export type Formula = ReadOnly<{
+export type Formula = Readonly<{
 	type: 'formula',
 	value: string
 }>
-export type Lambda = ReadOnly<{
+export type Lambda = Readonly<{
 	type: 'lambda',
 	value: string
 }>

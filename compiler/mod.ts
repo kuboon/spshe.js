@@ -1,40 +1,29 @@
-import { Primitive, SpsheDoc } from "../types"
-import { CompiledCell } from "./dependency"
-import { CompiledCells, getDependencyArray } from "./dependency"
+import { Cell, Formula, Lambda, Primitive, SpsheDoc } from "../types.ts"
+import { CompiledCell, CompiledCells, getDependencyArray } from "./dependency.ts"
 
-export function compile(doc: SpsheDoc): string{
+export function compile(doc: SpsheDoc): string {
 	const compiled: CompiledCells = {}
-	for(const key in doc){
+	for (const key in doc) {
 		const cell = doc[key]
-		if(!isPrimitive(cell)){
-			compiled[key] = compileCell(cell)
+		if (!isPrimitive(cell)) {
+			compiled[key] = compileCell(key, cell)
 		}
 	}
 	const arr = getDependencyArray(compiled)
-  return arr.map(key =>	compiled[key].js).join('\n')
+	return arr.map(key => compiled[key].js).join('\n')
 }
-function compileCell(cell): CompiledCell {
-	const rows = cell.rows || 1
-	const cols = cell.cols || 1
-	if(rows === 1 && cols === 1){
-		const left = `$[${key}]`
-		const {type, value} = cell
-		const {deps, right} = compileFormula({col, row, value})
-		switch(type){
-		case 'formula':
-			return { deps, js: `${left}=${right}`}
-		case 'lambda':
-			return { deps, js: `${left}=(...args)=>${right}`}
-		default:
-			throw 'not impl'
-		}
+function compileCell(key: string, cell: Formula | Lambda): CompiledCell {
+	const deps: string[] = []
+	function replacer(ref: string) {
+		deps.push(ref)
+		return `$('${ref}')`;
 	}
+	const str = cell.value.replace(/([A-Z]+)(\d+)(:([A-Z]+)(\d+))?/g, replacer);
+	const js = `$('${key}', ${str})`
+	return {deps, js}
 }
-function isPrimitive(cell): cell is Primitive{
-	if(typeof cell !== 'object') return true
-	if(cell.type == 'datetime') return true
+function isPrimitive(cell: Cell): cell is Primitive {
+	if (typeof cell !== 'object') return true
+	if (cell.type == 'datetime') return true
 	return false
-}
-function compileFormula({col, row, value}){
-	// A1 
 }
