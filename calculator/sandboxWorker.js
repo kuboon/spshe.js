@@ -65,7 +65,6 @@ addEventListener("message", ({ data }) => {
   const resolver = new Proxy(doc, proxyHandler)
   const _postMessage = postMessage;
   removeGlobals()
-  console.log(code)
   new Function("$", code)(resolver);
 
   for(const key in doc) {

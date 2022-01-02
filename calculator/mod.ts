@@ -1,7 +1,7 @@
 import { SpsheDoc } from "../spshe/types.ts";
 import { compile } from "../compiler/mod.ts";
 export function calculate(doc: SpsheDoc): Promise<SpsheDoc> {
-	const js = compile(doc) + '\nreturn $'
+	const js = compile(doc)
 	return safeEval(doc, js)
 }
 
@@ -10,7 +10,6 @@ export function calculate(doc: SpsheDoc): Promise<SpsheDoc> {
 function safeEval(doc: SpsheDoc, code: string, timeoutms = 1000): Promise<SpsheDoc> {
 	const worker = new Worker(new URL("sandboxWorker.js", import.meta.url).href, { type: "module", name: "sandboxWorker" });
 
-	console.log(code)
 	return new Promise((resolve, reject) => {
 		const timer = setTimeout(() => {
 			worker.terminate();

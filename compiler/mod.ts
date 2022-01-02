@@ -17,7 +17,6 @@ function compileCell(doc: SpsheDoc, key: string, cell: Formula | Lambda): Compil
 		if (c2 || r2) {
 			const it = new Range(doc, ref).rows()
 			const rows = Array.from(it)
-			console.log('r', rows)
 			deps.push(...rows.flatMap(x => x))
 		} else {
 			deps.push(ref)

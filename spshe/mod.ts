@@ -18,20 +18,29 @@ export function* rangeIterator(doc: SpsheDoc, from: string, to: string) {
 const RowNum = {
 	encode(n: number): string {
 		const ret: string[] = []
-		const z = "Z".charCodeAt(0)
+		const base = 26
+		const codebase = "A".charCodeAt(0) - 1
 		do {
-			const base = ret.length == 0 ? 26 : 27
-			ret.push(String.fromCharCode(z - base + 1 + (n % base)))
+			const num = n % base
+			let code
+			if(num === 0) {
+				code = codebase + base
+				n -= base
+			} else {
+				code = codebase + num
+			}
+			ret.push(String.fromCharCode(code))
 			n = Math.floor(n / base)
 		} while (n > 0)
 		return ret.reverse().join('')
 	},
 	decode(str: string): number {
 		let ret = 0
-		const z = "Z".charCodeAt(0)
-		for (let i = 0; i < str.length; i++) {
-			const base = i == str.length - 1 ? 26 : 27
-			ret = ret * base + str.charCodeAt(i) - (z - base + 1)
+		const base = 26
+		const a = "A".charCodeAt(0)
+		for (const c of str) {
+			const num = c.charCodeAt(0) - a + 1
+			ret = ret * base + num
 		}
 		return ret
 	}
