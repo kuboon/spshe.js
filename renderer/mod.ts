@@ -1,6 +1,12 @@
-import { SpsheDoc } from "../spshe/types.ts";
+import { SpsheDoc, Cell } from "../spshe/types.ts";
+
 type renderOptions = {
 	withHeaders: boolean
+}
+type SpsheMatrix = {
+	cells: Cell[][],
+	maxCol: number,
+	maxRow: number,
 }
 export function renderHtmlTable(doc: SpsheDoc, opts: renderOptions = {
 	withHeaders: true

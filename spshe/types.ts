@@ -9,12 +9,8 @@ export type Formula = Readonly<{
 	type: 'formula',
 	value: string
 }>
-export type Lambda = Readonly<{
-	type: 'lambda',
-	value: string
-}>
 
-export type Cell = Primitive | Formula | Lambda
+export type Cell = Primitive | Formula
 export type SpsheDoc = {
 	[key: string]: Cell
 }

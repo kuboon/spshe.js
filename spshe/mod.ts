@@ -15,10 +15,10 @@ export function* rangeIterator(doc: SpsheDoc, from: string, to: string) {
 		}
 	}
 }
+const base = 26
+const codebase = "A".charCodeAt(0) - 1
 const ColNum = {
 	encode(n: number): string {
-		const base = 26
-		const codebase = "A".charCodeAt(0) - 1
 		const ret: string[] = []
 		do {
 			let num = n % base
@@ -32,18 +32,16 @@ const ColNum = {
 		return ret.join('')
 	},
 	decode(str: string): number {
-		const base = 26
-		const codebase = "A".charCodeAt(0) - 1
-		return Array.from(str, c => c.charCodeAt(0) - codebase).reduce((acc, x) => acc * base + x, 0)
+		return Array.from(str, c => c.charCodeAt(0) - codebase).reduce((a, x) => a * base + x, 0)
 	}
 }
 export class CellRef {
 	constructor(public doc: SpsheDoc, public key: string) { }
 	get colRow() {
-		const m = this.key.match(/^([A-Z]+)([0-9]+)$/)
-		if (!m) throw new Error(`Invalid cell reference: ${this.key}`)
-		const row = Number(m[2]) - 1
-		const col = ColNum.decode(m[1])
+		const m = this.key.match(/^([A-Z]*)([0-9]*)$/)
+		if (!m || !(m[1] || m[2])) throw new Error(`Invalid cell reference: ${this.key}`)
+		const col = m[1] ? ColNum.decode(m[1]) : 0
+		const row = m[2] ? Number(m[2]) : 0
 		return { col, row }
 	}
 }
@@ -58,7 +56,7 @@ export class Range {
 		for (let r = from.colRow.row; r <= to.colRow.row; r++) {
 			const row: string[] = []
 			for (let c = from.colRow.col; c <= to.colRow.col; c++) {
-				const key = ColNum.encode(c) + (r + 1)
+				const key = ColNum.encode(c) + r
 				if (this.doc[key]) {
 					row.push(key)
 				}
