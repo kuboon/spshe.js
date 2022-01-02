@@ -1,4 +1,4 @@
-import { SpsheDoc } from "../types.ts";
+import { SpsheDoc } from "../spshe/types.ts";
 import { compile } from "../compiler/mod.ts";
 export function calculate(doc: SpsheDoc): Promise<SpsheDoc> {
 	const js = compile(doc) + '\nreturn $'

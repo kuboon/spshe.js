@@ -1,6 +1,6 @@
-import { SpsheDoc } from "../types.ts";
+import { SpsheDoc } from "../spshe/types.ts";
 import { calculate } from "./mod.ts";
-import { assertEquals } from "https://deno.land/std@0.119.0/testing/asserts.ts";
+import { assertEquals } from "../test_deps.ts";
 Deno.test({
 	name: 'simple calculate',
 	async fn() {

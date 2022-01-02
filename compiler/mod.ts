@@ -1,5 +1,4 @@
-import { Range } from "../spshe/mod.ts";
-import { Cell, Formula, Lambda, Primitive, SpsheDoc } from "../types.ts"
+import { Range, Cell, Formula, Lambda, Primitive, SpsheDoc } from "../spshe/mod.ts";
 import { CompiledCell, CompiledCells, getDependencyArray } from "./dependency.ts"
 
 export function compile(doc: SpsheDoc): string {
@@ -15,11 +14,11 @@ export function compile(doc: SpsheDoc): string {
 function compileCell(doc: SpsheDoc, key: string, cell: Formula | Lambda): CompiledCell {
 	const deps: string[] = []
 	function replacer(ref: string, _c1: string, _r1: string, c2: string, r2: string) {
-		if(c2 || r2) {
+		if (c2 || r2) {
 			const it = new Range(doc, ref).rows()
 			const rows = Array.from(it)
-			console.log('r',rows)
-			deps.push(...rows.flatMap(x=>x))
+			console.log('r', rows)
+			deps.push(...rows.flatMap(x => x))
 		} else {
 			deps.push(ref)
 		}
@@ -27,7 +26,7 @@ function compileCell(doc: SpsheDoc, key: string, cell: Formula | Lambda): Compil
 	}
 	const str = cell.value.replace(/([A-Z]+)(\d+)(:([A-Z]+)(\d+))?/g, replacer);
 	const js = `$['${key}'] = ${str}`
-	return {deps, js}
+	return { deps, js }
 }
 function isPrimitive(cell: Cell): cell is Primitive {
 	if (typeof cell !== 'object') return true
