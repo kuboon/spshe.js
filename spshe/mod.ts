@@ -17,32 +17,24 @@ export function* rangeIterator(doc: SpsheDoc, from: string, to: string) {
 }
 const RowNum = {
 	encode(n: number): string {
-		const ret: string[] = []
 		const base = 26
 		const codebase = "A".charCodeAt(0) - 1
+		const ret: string[] = []
 		do {
-			const num = n % base
-			let code
+			let num = n % base
 			if(num === 0) {
-				code = codebase + base
+				num = base
 				n -= base
-			} else {
-				code = codebase + num
 			}
-			ret.push(String.fromCharCode(code))
+			ret.unshift(String.fromCharCode(codebase + num))
 			n = Math.floor(n / base)
 		} while (n > 0)
-		return ret.reverse().join('')
+		return ret.join('')
 	},
 	decode(str: string): number {
-		let ret = 0
 		const base = 26
-		const a = "A".charCodeAt(0)
-		for (const c of str) {
-			const num = c.charCodeAt(0) - a + 1
-			ret = ret * base + num
-		}
-		return ret
+		const codebase = "A".charCodeAt(0) - 1
+		return Array.from(str, c => c.charCodeAt(0) - codebase).reduce((acc, x) => acc * base + x, 0)
 	}
 }
 export class CellRef {

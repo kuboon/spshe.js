@@ -6,11 +6,11 @@ Deno.test({
 	fn: () => {
 		const { RowNum } = test;
 		const { encode, decode } = RowNum;
+		assertEquals(encode(27), "AA");
 		assertEquals(decode("AB"), 28);
 		assertEquals(decode("AAA"), 26**2 + 26 + 1);
 		assertEquals(encode(1), "A");
 		assertEquals(encode(26), "Z");
-		assertEquals(encode(27), "AA");
 		assertEquals(encode(28), "AB");
 		assertEquals(encode(decode("AZ") + 1), 'BA');
 		assertEquals(encode(decode("ZZ") + 1), 'AAA');
