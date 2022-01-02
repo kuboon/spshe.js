@@ -50,11 +50,11 @@ function* rangeIter(doc, from, to) {
 }
 const proxyHandler = {
   get(doc, key) {
-    const [from, to] = key.split(":");
-    if (!to) {
+    const keys = key.split(",");
+    if (keys.length === 1) {
       return doc[key];
     }
-    return [...rangeIter(doc, from, to)].map((key) => doc[key]);
+    return keys.map((key) => doc[key]);
   },
   set(doc, key, value) {
     doc[key] = value;

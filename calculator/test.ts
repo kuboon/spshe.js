@@ -66,7 +66,7 @@ Deno.test({
 		const doc: SpsheDoc = {
 			A1: {
 				type: 'formula',
-				value: 'sum(...2:3)',
+				value: 'sum(...A2:A3)',
 			},
 			A2: {
 				type: 'formula',
@@ -75,6 +75,6 @@ Deno.test({
 			A3: 4
 		}
 		const result = await calculate(doc)
-		assertEquals(result.A1, 5)
+		assertEquals(result.A1, 9)
 	}
 })
